@@ -38,6 +38,27 @@ function authManagerCheckUrls()
 {
     $currenUrl = $_SERVER['REQUEST_URI'];
     if (strpos($currenUrl, 'auth/register') !== false) {
+        if (isset($_POST['save_register_form'])){
+            $user_full_name = $_POST['user_full_name'];
+            $user_email = $_POST['user_email'];
+            $user_pass = $_POST['user_pass'];
+
+            $hashError = false;
+            $errorMsg = [];
+
+            if (empty($user_email)){
+                $hashError = true;
+                $errorMsg[] = "پر کردن فیلد نام الزامی می باشد.";
+            }
+            if (!filter_var($user_email, FILTER_VALIDATE_EMAIL) or email_exists($user_email)){
+                $hashError = true;
+                $errorMsg[] = "این ایمیل در دسترس نمی باشد.";
+            }
+            if (strlen($user_pass)<6){
+                $hashError = true;
+                $errorMsg[] = "تعداد کاراکترها کمتر از یک است.";
+            }
+        }
         include_once ATHM_TPL_FRONT . 'frontend.php';
         exit();
     }

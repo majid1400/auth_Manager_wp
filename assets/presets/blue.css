@@ -1,0 +1,5 @@
+.button, button, input[type="button"], input[type="reset"], input[type="submit"]
+{
+    background-color:#4d91ca !important;
+    border:0.1rem solid #4d8cca !important;
+}
