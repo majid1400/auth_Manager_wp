@@ -37,14 +37,15 @@ register_deactivation_hook(__FILE__, 'authManagerDeactivation');
 function authManagerCheckUrls()
 {
     $currenUrl = $_SERVER['REQUEST_URI'];
-    if (strpos($currenUrl, 'auth/register') !== false) {
+    if (strpos($currenUrl, 'auth/register') != false) {
+
+        $hashError = false;
+        $errorMsg = [];
+
         if (isset($_POST['save_register_form'])){
             $user_full_name = $_POST['user_full_name'];
             $user_email = $_POST['user_email'];
             $user_pass = $_POST['user_pass'];
-
-            $hashError = false;
-            $errorMsg = [];
 
             if (empty($user_email)){
                 $hashError = true;

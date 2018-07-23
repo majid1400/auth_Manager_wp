@@ -14,6 +14,13 @@
 <div class="container">
     <div class="row">
         <div class="column column-50 column-offset-25">
+            <?php if ($hashError): ?>
+                <ul>
+                    <?php foreach ($errorMsg as $error): ?>
+                        <li style="color: red;"><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
             <form action="" method="post">
                 <fieldset>
                     <label for="user_full_name">نام و نام خانوادگی: </label>
