@@ -21,6 +21,11 @@
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?>
+            <?php if ($isSuccess): ?>
+                <div>
+                    <p>ثبت شما با موفقیت انجام شد.</p>
+                </div>
+            <?php endif; ?>
             <form action="" method="post">
                 <fieldset>
                     <label for="user_full_name">نام و نام خانوادگی: </label>
