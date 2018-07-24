@@ -34,11 +34,21 @@ register_deactivation_hook(__FILE__, 'authManagerDeactivation');
 
 ################### تغییر دادن url ##################
 
+function checkAuth($url = '/')
+{
+
+    # اگر کاربر لاگین کرده بود وارد صفحه اصلی می شود.
+    if (is_user_logged_in()) {
+        wp_redirect($url);
+        exit();
+    }
+}
+
 function authManagerCheckUrls()
 {
     $currenUrl = $_SERVER['REQUEST_URI'];
     if (strpos($currenUrl, 'auth/register') != false) {
-
+        checkAuth();
         $hashError = false;
         $isSuccess = false;
         $errorMsg = [];
@@ -65,10 +75,10 @@ function authManagerCheckUrls()
                 list($preAt, $postAt) = explode('@', $user_email);
                 $user_login = $preAt . rand(1000, 9999);
                 $user_data = [
-                    'user_login'    => apply_filters('pre_user_login', $user_login),
-                    'display_name'  => apply_filters('pre_user_display_name', $user_full_name),
-                    'user_email'    => apply_filters('pre_user_email', $user_email),
-                    'user_pass'     => apply_filters('pre_user_pass', $user_pass)
+                    'user_login' => apply_filters('pre_user_login', $user_login),
+                    'display_name' => apply_filters('pre_user_display_name', $user_full_name),
+                    'user_email' => apply_filters('pre_user_email', $user_email),
+                    'user_pass' => apply_filters('pre_user_pass', $user_pass)
                 ];
                 $user_register_result = wp_insert_user($user_data); # if was True return ID
                 if (is_wp_error($user_register_result)) {
@@ -77,12 +87,41 @@ function authManagerCheckUrls()
                 } else {
                     $isSuccess = true;
                     do_action('user_register', $user_register_result);
+                    wp_redirect('auth/login');
+                    exit();
                 }
             }
         }
         include_once ATHM_TPL_FRONT . 'frontend.php';
         exit();
     }
+
+    if (strpos($currenUrl, 'auth/login') != false) {
+        checkAuth();
+        if (isset($_POST['do_login'])){
+            $user_email = $_POST['user_email'];
+            $user_pass = $_POST['user_pass'];
+            $user_exist_data = get_user_by('email',$user_email);
+            $user_login_data = [
+                'user_login'    =>  $user_exist_data->user_login,
+                'user_password' =>  $user_pass
+            ];
+            wp_signon($user_login_data);
+
+        }
+        include_once ATHM_TPL_FRONT . 'login.php';
+        exit();
+    }
+}
+
+function disableWpLoginPage()
+{
+    $currenUrl = $_SERVER['REQUEST_URI'];
+    if (strpos($currenUrl, 'wp-login.php') != false) {
+        wp_redirect('auth/register');
+        exit();
+    }
 }
 
 add_action('parse_request', 'authManagerCheckUrls');
+add_action('init', 'disableWpLoginPage');
