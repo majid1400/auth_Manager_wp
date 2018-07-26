@@ -14,15 +14,22 @@
 <div class="container">
     <div class="row">
         <div class="column column-50 column-offset-25">
+            <?php if ($hashError): ?>
+                <ul>
+                    <?php foreach ($errorMsg as $error): ?>
+                        <li style="color: red;"><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
             <form action="" method="post">
                 <fieldset>
                     <label for="user_email">ایمیل: </label>
-                    <input type="email" name="user_email" id="user_email">
+                    <input type="text" name="user_email" id="user_email">
 
                     <label for="user_pass">کلمه عبور: </label>
                     <input type="password" name="user_pass" id="user_pass">
 
-                    <input class="button-primary" name="do_login" type="submit" value="ثبت نام">
+                    <input class="button-primary" name="do_login" type="submit" value="ورود">
                 </fieldset>
             </form>
         </div>

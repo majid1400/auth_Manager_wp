@@ -17,7 +17,10 @@ defined('ABSPATH') || die('access denied!');
 define('ATHM_DIR', plugin_dir_path(__FILE__));
 define('ATHM_URL', plugin_dir_url(__FILE__));
 define('ATHM_TPL_FRONT', ATHM_DIR . 'templates/frontend/');
+define('ATHM_INC', ATHM_DIR . 'inc/');
 define('ATHM_ASSETS', ATHM_URL . 'assets/');
+
+include_once ATHM_INC . 'functions.php';
 
 ################### فعال و غیر فعال شدن پلاگین ##################
 function authManagerActivation()
@@ -47,11 +50,11 @@ function checkAuth($url = '/')
 function authManagerCheckUrls()
 {
     $currenUrl = $_SERVER['REQUEST_URI'];
+    $hashError = false;
+    $isSuccess = false;
+    $errorMsg = [];
     if (strpos($currenUrl, 'auth/register') != false) {
         checkAuth();
-        $hashError = false;
-        $isSuccess = false;
-        $errorMsg = [];
 
         if (isset($_POST['save_register_form'])) {
             $user_full_name = $_POST['user_full_name'];
@@ -101,12 +104,26 @@ function authManagerCheckUrls()
         if (isset($_POST['do_login'])){
             $user_email = $_POST['user_email'];
             $user_pass = $_POST['user_pass'];
-            $user_exist_data = get_user_by('email',$user_email);
-            $user_login_data = [
-                'user_login'    =>  $user_exist_data->user_login,
-                'user_password' =>  $user_pass
-            ];
-            wp_signon($user_login_data);
+            $user = athm_check_login($user_email, $user_pass);
+
+            if ($user == false){
+                $hashError = true;
+                $errorMsg[] = 'نام کاربری یا کلمه عبور اشتباه می باشد.';
+            }
+
+            if (!$hashError){
+                $user_login_data = [
+                    'user_login'    =>  $user->user_login,
+                    'user_password' =>  $user_pass
+                ];
+            }
+            $login_result = wp_signon($user_login_data);
+            if (is_wp_error($login_result)){
+                $hashError = true;
+                $errorMsg[] = 'خطایی در عملیات لاگین اتفاق افتاده است. دوباره امتحان کنید.';
+            }else{
+                wp_redirect('/wp-admin');
+            }
 
         }
         include_once ATHM_TPL_FRONT . 'login.php';
@@ -124,4 +141,4 @@ function disableWpLoginPage()
 }
 
 add_action('parse_request', 'authManagerCheckUrls');
-add_action('init', 'disableWpLoginPage');
+//add_action('init', 'disableWpLoginPage');
