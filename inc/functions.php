@@ -11,3 +11,9 @@ function athm_check_login($email, $password)
     }
     return $user;
 }
+
+function url_logout_new($logout_url, $redirect){
+    return home_url(). '/auth/logout';
+}
+
+add_filter('logout_url', 'url_logout_new', 10, 2);

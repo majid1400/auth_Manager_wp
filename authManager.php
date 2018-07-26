@@ -129,6 +129,13 @@ function authManagerCheckUrls()
         include_once ATHM_TPL_FRONT . 'login.php';
         exit();
     }
+
+    if (strpos($currenUrl, 'auth/logout')){
+        wp_logout();
+        wp_redirect('/');
+        exit();
+    }
+
 }
 
 function disableWpLoginPage()
@@ -141,4 +148,4 @@ function disableWpLoginPage()
 }
 
 add_action('parse_request', 'authManagerCheckUrls');
-//add_action('init', 'disableWpLoginPage');
+add_action('init', 'disableWpLoginPage');
