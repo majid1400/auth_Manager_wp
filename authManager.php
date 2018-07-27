@@ -17,10 +17,13 @@ defined('ABSPATH') || die('access denied!');
 define('ATHM_DIR', plugin_dir_path(__FILE__));
 define('ATHM_URL', plugin_dir_url(__FILE__));
 define('ATHM_TPL_FRONT', ATHM_DIR . 'templates/frontend/');
+define('ATHM_TPL_ADMIN', ATHM_DIR . 'templates/admin/');
+define('ATHM_ADMIN', ATHM_DIR . 'admin/');
 define('ATHM_INC', ATHM_DIR . 'inc/');
 define('ATHM_ASSETS', ATHM_URL . 'assets/');
 
 include_once ATHM_INC . 'functions.php';
+include_once ATHM_ADMIN . 'admin.php';
 
 ################### فعال و غیر فعال شدن پلاگین ##################
 function authManagerActivation()
