@@ -4,7 +4,7 @@ function athm_users_manager_handler()
     global $wpdb, $table_prefix;
     $users_tabel = $table_prefix . 'users';
     $users = $wpdb->get_results("SELECT * FROM {$users_tabel}");
-    include_once ATHM_TPL_ADMIN . 'users/users.php';
+    athm_load_tpl('settings.users',compact('users'));
 }
 
 function athm_add_admin_page()

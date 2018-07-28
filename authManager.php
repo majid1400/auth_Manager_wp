@@ -24,6 +24,7 @@ define('ATHM_ASSETS', ATHM_URL . 'assets/');
 
 include_once ATHM_INC . 'functions.php';
 include_once ATHM_ADMIN . 'admin.php';
+include_once ATHM_INC . 'utility.php';
 
 ################### فعال و غیر فعال شدن پلاگین ##################
 function authManagerActivation()
@@ -104,27 +105,27 @@ function authManagerCheckUrls()
 
     if (strpos($currenUrl, 'auth/login') != false) {
         checkAuth();
-        if (isset($_POST['do_login'])){
+        if (isset($_POST['do_login'])) {
             $user_email = $_POST['user_email'];
             $user_pass = $_POST['user_pass'];
             $user = athm_check_login($user_email, $user_pass);
 
-            if ($user == false){
+            if ($user == false) {
                 $hashError = true;
                 $errorMsg[] = 'نام کاربری یا کلمه عبور اشتباه می باشد.';
             }
 
-            if (!$hashError){
+            if (!$hashError) {
                 $user_login_data = [
-                    'user_login'    =>  $user->user_login,
-                    'user_password' =>  $user_pass
+                    'user_login' => $user->user_login,
+                    'user_password' => $user_pass
                 ];
             }
             $login_result = wp_signon($user_login_data);
-            if (is_wp_error($login_result)){
+            if (is_wp_error($login_result)) {
                 $hashError = true;
                 $errorMsg[] = 'خطایی در عملیات لاگین اتفاق افتاده است. دوباره امتحان کنید.';
-            }else{
+            } else {
                 wp_redirect('/wp-admin');
             }
 
@@ -133,7 +134,7 @@ function authManagerCheckUrls()
         exit();
     }
 
-    if (strpos($currenUrl, 'auth/logout')){
+    if (strpos($currenUrl, 'auth/logout')) {
         wp_logout();
         wp_redirect('/');
         exit();
@@ -150,5 +151,24 @@ function disableWpLoginPage()
     }
 }
 
+
+function add_auth_manager_settings_menu()
+{
+    add_options_page(
+        'تنظیمات ورود و ثبت نام',
+        'تنظیمات ورود و ثبت نام',
+        'manage_options',
+        'athm_options',
+        'auth_manager_settings_page'
+    );
+
+}
+
+function auth_manager_settings_page()
+{
+    athm_load_tpl('settings.settings');
+}
+
 add_action('parse_request', 'authManagerCheckUrls');
-add_action('init', 'disableWpLoginPage');
+//add_action('init', 'disableWpLoginPage');
+add_action('admin_menu', 'add_auth_manager_settings_menu');
