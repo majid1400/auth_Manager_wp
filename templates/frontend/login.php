@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="<?php echo ATHM_ASSETS . 'css/milligram-rtl.css' ?>">
     <link rel="stylesheet" href="<?php echo ATHM_ASSETS . 'css/normalize.css' ?>">
     <link rel="stylesheet" href="<?php echo ATHM_ASSETS . 'css/custom.css' ?>">
+    <link rel="stylesheet" href="<?php $template = get_option('athm_update_template_setting'); echo ATHM_ASSETS . "presets/$template.css" ?>">
 </head>
 <body>
 <div class="container">

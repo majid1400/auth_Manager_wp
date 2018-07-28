@@ -166,9 +166,26 @@ function add_auth_manager_settings_menu()
 
 function auth_manager_settings_page()
 {
-    athm_load_tpl('settings.settings');
+
+//    add_option();
+//    update_option();
+//    delete_option();
+//    get_option();
+
+    if (isset($_POST['athm_saver_options'])) {
+        $default_template = isset($_POST['athm_template']) ? $_POST['athm_template'] : 'red';
+        update_option('athm_update_template_setting', $default_template);
+    }
+    $default_template = get_option('athm_update_template_setting');
+
+    $templates = [
+        'red' => 'قالب قرمز',
+        'blue' => 'قالب آبی',
+        'purple' => 'قالب بنفش'
+    ];
+    athm_load_tpl('settings.settings', compact('templates', 'default_template'));
 }
 
 add_action('parse_request', 'authManagerCheckUrls');
-//add_action('init', 'disableWpLoginPage');
+add_action('init', 'disableWpLoginPage');
 add_action('admin_menu', 'add_auth_manager_settings_menu');
