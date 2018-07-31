@@ -29,6 +29,13 @@ include_once ATHM_INC . 'utility.php';
 ################### فعال و غیر فعال شدن پلاگین ##################
 function authManagerActivation()
 {
+    $default_template = get_option('athm_default_template', false);
+    if (!$default_template) {
+        update_option('athm_default_template', 'red');
+    }
+    update_option('athm_login_path', 'login');
+    update_option('athm_register_path', 'register');
+
 }
 
 function authManagerDeactivation()
