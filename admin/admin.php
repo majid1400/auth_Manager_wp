@@ -1,10 +1,23 @@
 <?php
 function athm_users_manager_handler()
 {
+//    add_user_meta();
+//    update_user_meta();
+//    delete_user_meta();
+//    get_user_meta();
+
     global $wpdb, $table_prefix;
     $users_tabel = $table_prefix . 'users';
+    $action = isset($_GET['action']) && !empty($_GET['action']) ? $_GET['action'] : null;
+    if ($action) {
+        $action_callback = $action . '_handler'; // => edit_user_handler
+        if (function_exists($action_callback)) {
+            $action_callback();
+            return;
+        }
+    }
     $users = $wpdb->get_results("SELECT * FROM {$users_tabel}");
-    athm_load_tpl('settings.users', compact('users'));
+    athm_load_tpl('users.users', compact('users'));
 }
 
 function athm_add_admin_page()
@@ -61,3 +74,13 @@ function auth_manager_settings_page()
 
 add_action('admin_menu', 'athm_add_admin_page');
 add_action('admin_menu', 'add_auth_manager_settings_menu');
+
+function edit_user_handler()
+{
+    global $wpdb, $table_prefix;
+    $user_id = $_GET['user_id'];
+    $user = get_user_by('id', $user_id);
+//	var_dump($user);
+    athm_load_tpl('users.edit');
+
+}
