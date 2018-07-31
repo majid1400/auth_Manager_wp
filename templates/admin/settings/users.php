@@ -1,6 +1,6 @@
 <div class="wrap">
     <h1>مدیریت کاربران</h1>
-    
+
     <table class="widefat">
         <tr>
             <th>نام</th>

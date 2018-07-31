@@ -54,10 +54,13 @@ function checkAuth($url = '/')
 function authManagerCheckUrls()
 {
     $currenUrl = $_SERVER['REQUEST_URI'];
+    $login_path = get_option('athm_login_path', 'login');
+    $register_path = get_option('athm_register_path', 'register');
+    $auth_prefix = 'auth/';
     $hashError = false;
     $isSuccess = false;
     $errorMsg = [];
-    if (strpos($currenUrl, 'auth/register') != false) {
+    if (strpos($currenUrl, $register_path) != false) {
         checkAuth();
 
         if (isset($_POST['save_register_form'])) {
@@ -103,7 +106,7 @@ function authManagerCheckUrls()
         exit();
     }
 
-    if (strpos($currenUrl, 'auth/login') != false) {
+    if (strpos($currenUrl, $login_path) != false) {
         checkAuth();
         if (isset($_POST['do_login'])) {
             $user_email = $_POST['user_email'];
@@ -140,6 +143,23 @@ function authManagerCheckUrls()
         exit();
     }
 
+    if (strpos($currenUrl, 'athm/dashboard') !== false) {
+        if (!athm_is_admin()) {
+            athm_redirect('/');
+        }
+        if (isset($_POST['athm_save_options'])) {
+            $default_template = isset($_POST['athm_template']) ? $_POST['athm_template'] : 'red';
+            update_option('athm_default_template', $default_template);
+        }
+        $default_template = get_option('athm_default_template');
+        $templates = [
+            'red' => 'قالب قرمز',
+            'blue' => 'قالب آبی',
+            'purple' => 'قالب بنفش'
+        ];
+        athm_load_tpl('dashboard.index', compact('templates', 'default_template'), 'frontend');
+        exit;
+    }
 }
 
 function disableWpLoginPage()
@@ -152,40 +172,5 @@ function disableWpLoginPage()
 }
 
 
-function add_auth_manager_settings_menu()
-{
-    add_options_page(
-        'تنظیمات ورود و ثبت نام',
-        'تنظیمات ورود و ثبت نام',
-        'manage_options',
-        'athm_options',
-        'auth_manager_settings_page'
-    );
-
-}
-
-function auth_manager_settings_page()
-{
-
-//    add_option();
-//    update_option();
-//    delete_option();
-//    get_option();
-
-    if (isset($_POST['athm_saver_options'])) {
-        $default_template = isset($_POST['athm_template']) ? $_POST['athm_template'] : 'red';
-        update_option('athm_update_template_setting', $default_template);
-    }
-    $default_template = get_option('athm_update_template_setting');
-
-    $templates = [
-        'red' => 'قالب قرمز',
-        'blue' => 'قالب آبی',
-        'purple' => 'قالب بنفش'
-    ];
-    athm_load_tpl('settings.settings', compact('templates', 'default_template'));
-}
-
 add_action('parse_request', 'authManagerCheckUrls');
-add_action('init', 'disableWpLoginPage');
-add_action('admin_menu', 'add_auth_manager_settings_menu');
+//add_action('init', 'disableWpLoginPage');
