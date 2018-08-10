@@ -14,7 +14,7 @@
                 <td><?php echo $user->user_nicename ?></td>
                 <td><?php echo $user->user_email ?></td>
                 <td><?php echo get_user_meta($user->ID, 'mobile', true) ?></td>
-                <td><?php echo '' ?></td>
+                <td><?php echo get_user_meta($user->ID, 'Inventory', true) ?> </td>
                 <td>
                     <a title="ویرایش اطلاعات کاربر"
                        href="<?php echo add_query_arg(['action' => 'edit_user', 'user_id' => $user->ID]); ?>">

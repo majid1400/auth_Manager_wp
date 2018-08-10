@@ -80,7 +80,13 @@ function edit_user_handler()
     global $wpdb, $table_prefix;
     $user_id = $_GET['user_id'];
     $user = get_user_by('id', $user_id);
-//	var_dump($user);
-    athm_load_tpl('users.edit');
+	var_dump($_GET['mobile']);
+	if (isset($_POST['athm_save_options'])){
+        $mobile_option = isset($_POST['mobile']) ? $_POST['mobile'] : 'mobile';
+        update_user_meta($user_id,'mobile',$mobile_option);
+        $Inventory_option = isset($_POST['Inventory']) ? $_POST['Inventory'] : 'Inventory';
+        update_user_meta($user_id,'Inventory',$Inventory_option);
+    }
+    athm_load_tpl('users.edit',compact('user_id'));
 
 }

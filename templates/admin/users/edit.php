@@ -5,13 +5,17 @@
             <tr valign="top">
                 <th scope="row">شماره تماس :</th>
                 <td>
-                    <input type="text">
+                    <input type="text"
+                           name="mobile"
+                           value="<?php echo get_user_meta($user_id,'mobile',true);?>">
                 </td>
             </tr>
             <tr valign="top">
                 <th scope="row">موجودی :</th>
                 <td>
-                    <input type="text">
+                    <input type="text"
+                           name="Inventory"
+                           value="<?php echo get_user_meta($user_id,'Inventory',true);?>">
                 </td>
             </tr>
         </table>
